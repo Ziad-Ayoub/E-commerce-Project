@@ -1,0 +1,137 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400;500;600&display=swap');
+
+:root {
+    --primary-dark: #0f172a;
+
+    --accent-gold: #d4af37;
+
+    --bg-light: #f8fafc;
+
+    --text-main: #334155;
+
+    --white: #ffffff;
+    --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+
+    --transition: all 0.3s ease-in-out;
+
+}
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    line-height: 1.6;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+    transition: var(--transition);
+}
+
+ul {
+    list-style: none;
+}
+
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+
+.navbar {
+    background: var(--white);
+    padding: 15px 0;
+    box-shadow: var(--shadow-sm);
+    position: sticky;
+
+    top: 0;
+    z-index: 1000;
+    border-bottom: 3px solid var(--accent-gold);
+
+}
+
+.navbar .container {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+}
+
+.logo {
+    font-family: 'Playfair Display', serif;
+
+    font-size: 28px;
+    color: var(--primary-dark);
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.logo span {
+    color: var(--accent-gold);
+
+}
+
+.nav-links {
+    display: flex;
+    gap: 30px;
+
+    align-items: center;
+}
+
+.nav-links a {
+    font-weight: 500;
+    font-size: 16px;
+    color: var(--primary-dark);
+}
+
+.nav-links a:hover {
+    color: var(--accent-gold);
+    transform: translateY(-2px);
+}
+
+
+.btn-gold {
+    background: linear-gradient(135deg, #d4af37, #b5952f);
+
+    color: var(--white);
+    padding: 12px 28px;
+    border-radius: 30px;
+
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: var(--transition);
+    box-shadow: 0 4px 10px rgba(212, 175, 55, 0.3);
+}
+
+.btn-gold:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(212, 175, 55, 0.5);
+
+}
+
+
+.footer {
+    background: var(--primary-dark);
+    color: var(--white);
+    text-align: center;
+    padding: 25px 0;
+    margin-top: 50px;
+    font-size: 14px;
+    border-top: 4px solid var(--accent-gold);
+}
