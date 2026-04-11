@@ -104,25 +104,18 @@ ul {
     transform: translateY(-2px);
 }
 
-
-.btn-gold {
-    background: linear-gradient(135deg, #d4af37, #b5952f);
-
-    color: var(--white);
-    padding: 12px 28px;
-    border-radius: 30px;
-
-    font-weight: 600;
-    border: none;
-    cursor: pointer;
-    transition: var(--transition);
-    box-shadow: 0 4px 10px rgba(212, 175, 55, 0.3);
+.category-container{
+    margin: 0 auto;
 }
 
-.btn-gold:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 15px rgba(212, 175, 55, 0.5);
-
+.filters{
+    background: beige;
+    border-radius: 10px;
+    padding: 25px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    height: fit-content;
+    position: sticky;
+    top: 20px;
 }
 
 
