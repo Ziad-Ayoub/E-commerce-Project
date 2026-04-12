@@ -6,9 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Premium E-Commerce Boilerplate</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="CSS/global.css">
-    <link rel="stylesheet" href="CSS/products.css">
-    <link rel="stylesheet" href="JS/products.js">
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/products.css">
 </head>
 
 <body>
@@ -26,75 +25,88 @@
         </div>
     </nav>
 
-    <div class="category-container" tyle="text-align: left; margin-top: 300px; margin-left: px;">
+    <div class="content-wrapper" tyle="text-align: left; margin-top: 300px; margin-left: px;">
         <!--category side filter-->
-            <aside class="filters">
-                <div class="filter-group">
-                    <h3 class="filter-title">
-                        <span>Category</span>
-                    </h3>
-                    <ul class="filter-options">
-                        <li>
-                            <input type="checkbox" id="accessories" data-filter="Category" data-value="Accessories">
-                            <label for="accessories">Accessories</label>
-                        </li>
-                        <li>
-                            <input type="checkbox" id="clothing" data-filter="Category" data-value="Clothing">
-                            <label for="clothing">Clothing</label>
-                        </li>
-                        <li>
-                            <input type="checkbox" id="shoes" data-filter="Category" data-value="Shoes">
-                            <label for="shoes">Shoes</label>
-                        </li>
-                        <li>
-                            <input type="checkbox" id="electronics" data-filter="Category" data-value="Electronics">
-                            <label for="electronics">Electronics</label>
-                        </li>
-                    </ul>
-                </div>
-                <div class="filter-group">
-                    <h3 class="filter-title">Pricing</h3>
-                    <div class="price-range">
-                        <div class="price-inputs">
-                            <div class="price-input">
-                                <label>Min</label>
-                                <input type="number" id="minprice" placeholder="0$" min="0">
-                            </div>
-                            <div class="price-input">
-                                <label>Max</label>
-                                <input type="number" id="maxprice" placeholder="1000$" max="1000000">
-                            </div>
+        <aside class="filters">
+            <div class="filter-group">
+                <h3 class="filter-title">
+                    <span>Category</span>
+                </h3>
+                <ul class="filter-options">
+                    <li class="filter-option">
+                        <input type="checkbox" id="accessories" data-filter="Category" data-value="Accessories">
+                        <label for="accessories">Accessories</label>
+                    </li>
+                    <li class="filter-option">
+                        <input type="checkbox" id="clothing" data-filter="Category" data-value="Clothing">
+                        <label for="clothing">Clothing</label>
+                    </li>
+                    <li class="filter-option">
+                        <input type="checkbox" id="shoes" data-filter="Category" data-value="Shoes">
+                        <label for="shoes">Shoes</label>
+                    </li>
+                    <li class="filter-option">
+                        <input type="checkbox" id="glasses" data-filter="Category" data-value="Glasses">
+                        <label for="glasses">Glasses</label>
+                    </li>
+                </ul>
+            </div>
+            <div class="filter-group">
+                <h3 class="filter-title">Pricing</h3>
+                <div class="price-range">
+                    <div class="price-inputs">
+                        <div class="price-input">
+                            <label>Min</label>
+                            <input type="number" id="minPrice" placeholder="0$" min="0">
+                        </div>
+                        <div class="price-input">
+                            <label>Max</label>
+                            <input type="number" id="maxPrice" placeholder="1000$" max="1000000">
                         </div>
                     </div>
                 </div>
-                <button class="clear-filters" id="clearFilters">Clear All Filters</button>
-            </aside>
-        </div>
-
-    </div>
-    <main class="main-content" style="min-height: 70vh; padding: 40px 0;">
-        <!--Search Bar-->
-        <section class="search-section">
-            <div class="search-bar">
-                <i class="fa-solid fa-search"></i>
-                <input type="text" placeholder="Search products..." id="searchInput">
             </div>
-        </section>
-        <!--Products-->
-        <div class="results-info">
-            showing <span id="resultCount"> 12 </span> of <span id="totalProducts">156</span> products
-        </div>
-        <div class="products-grid" id="productsGrid">
+            <div class="filter-actions">
+                <button class="apply-filters-btn" id="applyFilters">
+                    <i class="fa-solid fa-filter"></i>
+                    <span>Apply Filters</span>
+                    <span class="filter-count" id="filterCount">0</span>
+                </button>
+                <button class="clear-filters" id="clearFilters">
+                    <i class="fa-solid fa-times-circle"></i>
+                    Clear All Filters
+                </button>
+            <div>
+        </aside>
+        
+        <!--main content-->
+        <main class="main-content">
+            <!--Search Bar & button-->
+            <section class="search-section">
+                <div class="search-bar">
+                    <button type="button" class="search-button" id="searchButton" aria-label="Search">
+                        <div class="search-icon">
+                            <i class="fa-solid fa-search"></i>
+                        </div>
+                    </button>
+                    <input type="text" placeholder="Search products..." id="searchInput">
+                </div>
+            </section>
+            <!--Products-->
+            <div class="results-info">
+                showing <span id="resultCount"> 12 </span> of <span id="totalProducts">156</span> products
+            </div>
+            <div class="products-grid" id="productsGrid">
 
-        </div>
-    </main>
-
+            </div>
+        </main>
+    </div>
     <footer class="footer">
         <div class="container">
             <p>&copy; 2026 E-Commerce Team Project. </p>
         </div>
     </footer>
-    <script src="JS/products.js"></script>
+    <script src="js/products.js"></script>
 </body>
 
 </html>
