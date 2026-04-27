@@ -1,54 +1,120 @@
-function showLogin() {
-    document.getElementById("registerForm").style.display = "none";
-    document.getElementById("loginForm").style.display = "block";
+
+function get(id) {
+    return document.getElementById(id);
 }
+
+function showLogin() {
+    get("registerForm").style.display = "none";
+    get("loginForm").style.display = "block";
+}
+
 function showRegister() {
-    document.getElementById("registerForm").style.display = "block";
-    document.getElementById("loginForm").style.display = "none";
+    get("registerForm").style.display = "block";
+    get("loginForm").style.display = "none";
 }
 
 function register() {
-    const name = document.getElementById("username").value.trim();
-    const email = document.getElementById("registerEmail").value.trim();
-    const password = document.getElementById("registerPassword").value.trim();
+    const name = get("username").value.trim();
+    const email = get("registerEmail").value.trim();
+    const password = get("registerPassword").value.trim();
+
+    if (!name || !email || !password) {
+        alert("Please fill in all fields!");
+        return;
+    }
 
     if (!email.includes("@")) {
-        alert("Please enter a valid email");
+        alert("Please enter a valid email.");
         return;
     }
-    if (!name || !email || !password) {
-        alert("Fill all fields!");
-        return;
-    }
-
     const user = { name, email, password };
     localStorage.setItem("user", JSON.stringify(user));
-    alert("Registered successfully");
+
+    alert("Registered successfully!");
     showLogin();
 }
-function login() {
-    const email = document.getElementById("loginEmail").value.trim();
-    const password = document.getElementById("loginPassword").value.trim();
 
+function login() {
     const user = JSON.parse(localStorage.getItem("user"));
 
     if (!user) {
-        alert("No user found! Please register first");
+        alert("No account found. Please register first.");
         return;
     }
 
-    if (email === user.email && password === user.password) {
-        document.getElementById("loginForm").style.display = "none";
-        document.getElementById("registerForm").style.display = "none";
-        document.getElementById("profileSection").style.display = "block";
-        document.getElementById("profileName").innerText = user.name;
-        document.getElementById("profileEmail").innerText = user.email;
+    const enteredEmail = get("loginEmail").value;
+    const enteredPassword = get("loginPassword").value;
 
+    if (enteredEmail === user.email && enteredPassword === user.password) {
+
+        get("loginForm").style.display = "none";
+        get("registerForm").style.display = "none";
+        get("profileSection").style.display = "block";
+
+        get("profileName").innerText = user.name;
+        get("profileEmail").innerText = user.email;
+        get("profilePassword").innerText = "••••••••";
+        get("welcomeText").innerText = "Welcome " + user.name;
     } else {
-        alert("Wrong email or password");
+        alert("Wrong email or password!");
     }
 }
+
+
+let editType = ""; 
+function enableEdit(type) {
+    editType = type;
+
+    const user = JSON.parse(localStorage.getItem("user"));
+
+
+    get("editBox").style.display = "block";
+
+    if (type === "name")     get("editInput").value = user.name;
+    if (type === "email")    get("editInput").value = user.email;
+    if (type === "password") get("editInput").value = user.password;
+}
+
+
+
+function saveEdit() {
+    const user = JSON.parse(localStorage.getItem("user"));
+    const newValue = get("editInput").value.trim();
+
+    if (!newValue) {
+        alert("Field cannot be empty!");
+        return;
+    }
+
+    if (editType === "name") {
+        user.name = newValue;
+        get("profileName").innerText = newValue;
+        get("welcomeText").innerText = "Welcome " + newValue;
+    }
+
+    if (editType === "email") {
+        if (!newValue.includes("@")) {
+            alert("Please enter a valid email.");
+            return;
+        }
+        user.email = newValue;
+        get("profileEmail").innerText = newValue;
+    }
+
+    if (editType === "password") {
+        user.password = newValue;
+        get("profilePassword").innerText = "••••••••";
+    }
+    localStorage.setItem("user", JSON.stringify(user));
+    get("editBox").style.display = "none";
+}
+
 function logout() {
-    document.getElementById("profileSection").style.display = "none";
-    document.getElementById("loginForm").style.display = "block";
+    get("profileSection").style.display = "none";
+    get("loginForm").style.display = "block";
+}
+
+
+function goToOrders() {
+    alert("Orders page will be linked later!");
 }
