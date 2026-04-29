@@ -13,14 +13,26 @@ const products = [
 ];
 
 let filteredProducts = [...products];
+let currentPage = 1;
+const itemsPerPage = 6;
 
 // Products Grid Render
 function renderProducts(productsToShow = filteredProducts) {
     const grid = document.getElementById('productsGrid');
-    document.getElementById('resultCount').textContent = productsToShow.length;
-    document.getElementById('totalProducts').textContent = products.length;
-    
-    grid.innerHTML = productsToShow.map(product => `
+
+    //Calc. Pagination
+    const totalPages = Math.ceil(productsToShow.length / itemsPerPage);
+    //check if if filters reduce page count lower than below current page
+    if (currentPage > totalPages && totalPages > 0) {currentPage = totalPages;} 
+    else if (totalPages === 0) {currentPage = 1;}
+
+    //seperate array to get current page's items
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const paginatedItems = productsToShow.slice(startIndex, endIndex);
+
+    //render items
+    grid.innerHTML = paginatedItems.map(product => `
         <div class="product-card" data-product-id="${product.id}">
             <div class="product-image">
                 <img src="${product.image}" alt="${product.title}" loading="lazy">
@@ -29,12 +41,76 @@ function renderProducts(productsToShow = filteredProducts) {
                 <div class="product-category">${product.category}</div>
                 <h3 class="product-title">${product.title}</h3>
                 <div class="product-price">$${product.price.toLocaleString()}</div>
+
+                <div class="product-actions">
+                    <button class="action-btn add-to-cart" data-id="${product.id}"
+                        <i class="fa-solid fa-cart-shoppping"></i> Add to cart
+                    </button>
+                    <button class="action-btn add-to-wishlist" data-id="${product.id} aria-label="Add to Wishlist">
+                        <i class="fa-regular fa-star"></i>
+                    </button>
+                </div>
             </div>
         </div>
     `).join('');
 
+    //update text count
     document.getElementById('resultCount').textContent = productsToShow.length;
     document.getElementById('totalProducts').textContent = products.length;
+
+    //render btns
+    renderPagination(totalPages, productsToShow)
+}
+
+//Pagination btns func.
+function renderPagination(totalPages, productsToShow){
+    const pagincationContainer = document.getElementById('pagination');
+    if (!pagincationContainer) return;
+
+    pagincationContainer.innerHTML = ` `;
+
+    if (totalPages <= 1) return;
+
+    //create "Prev" Btn
+    const prevBtn = document.createElement('button');
+    prevBtn.innerHTML = `<i class="fa-solid fa-chevron-left"></!>`;
+    prevBtn.classList.add('page-btn');
+    prevBtn.disabled = currentPage === 1;
+    prevBtn.addEventListener('click', () => {
+        if(currentPage > 1) {
+            currentPage--;
+            renderProducts(productsToShow);
+        }
+    });
+    pagincationContainer.appendChild(prevBtn);
+
+    //create page number btns
+    for (let i = 1; i <= totalPages; i++){
+        const pageBtn =document.createElement('button');
+        pageBtn.textContent = i;
+        pageBtn.classList.add('page-btn');
+
+        if (i === currentPage) {pageBtn.classList.add('active');}
+
+        pageBtn.addEventListener('click', () => {
+            currentPage = i;
+            renderProducts(productsToShow);
+        });
+        pagincationContainer.appendChild(pageBtn);
+    }
+
+    //create "Next" btn
+    const nextBtn = document.createElement('button');
+    nextBtn.innerHTML = `<i class="fa-solid fa-chevron-right"></!>`;
+    nextBtn.classList.add('page-btn');
+    nextBtn.disabled = currentPage === totalPages;
+    nextBtn.addEventListener('click', () => {
+        if(currentPage < totalPages) {
+            currentPage++;
+            renderProducts(productsToShow);
+        }
+    });
+    pagincationContainer.appendChild(nextBtn);
 }
 
 // Update the filter count badge
@@ -77,6 +153,7 @@ function applyFilters() {
     
     // Results output
     filteredProducts = results;
+    currentPage = 1;
     renderProducts(results);
 }
 
@@ -136,6 +213,7 @@ function performSearch(){
             product.title.toLowerCase().includes(searchTerm) || product.category.toLowerCase().includes(searchTerm)
         );
     }
+    currentPage = 1;
     renderProducts(results);
 }
 
@@ -155,10 +233,38 @@ if (searchInput) {
     },100))
 }
 if (searchBtn) {searchBtn.addEventListener('click',performSearch)}
-
+ 
+//makes clicking on product, leads to it's details page
 document.addEventListener('click', (e) => {
-    if (e.target.closest('.product-card')) {
-        const productId = e.target.closest('.product-card').dataset.productId;
+    const cartBtn= e.target.closest('.add-to-cart');
+    const wishlistbtn = e.target.closest('.add-to-wishlist');
+    const productCard = e.target.closest('.product-card');
+    
+    //for clicking on "Add to cart" btn
+    if (cartBtn) {
+        const productId = cartBtn.dataset.id;
+        console.log(`Added product ${productId} to cart`);
+        // cart logic to be added here
+        alert(`Product ${cartBtn.dataset.title} added to cart`)
+    }
+
+    //for clicking on "Add to Wishlist" btn
+    else if (wishlistbtn){
+        const productId = wishlistbtn.dataset.id;
+        const icon = wishlistbtn.querySelector('i');
+
+        wishlistbtn.classList.toggle('active');
+        icon.classList.toggle('fa-regular');
+        icon.classList.toggle('fa-solid');
+
+        console.log(`product ${productId} add to wishlist`)
+        // wishlist logic to be added here
+    }
+
+
+    //for clicking on Card
+    else if (productCard) {
+        const productId = productCard.dataset.productId;
         if(productId) {
             window.location.href = `details.html?id=${productId}`;
         }
