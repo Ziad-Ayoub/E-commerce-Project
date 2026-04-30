@@ -26,3 +26,47 @@
     background: var(--accent-gold);
     color: white;
 }
+.btn-action {
+    border: none;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    font-size: 0.9rem;
+}
+.btn-details {
+    background: transparent;
+    border: 1px solid #444 !important;
+    color: #444;
+}
+.btn-details:hover {
+    background: #444;
+    color: white;
+}
+.btn-gold {
+    background: #d4af37;
+    color: white;
+}
+.btn-gold:hover {
+    background: #b8962e;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+ }
+.btn-remove {
+    background: #f8f8f8;
+    color: #888;
+}
+.btn-remove:hover {
+    background: #d32f2f !important;
+    color: white !important;
+}
+.product-card-template:hover {
+    box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+    transform: translateY(-8px);
+}
