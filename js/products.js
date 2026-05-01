@@ -1,18 +1,6 @@
-//Product data
-const products = [
-    {id: 1, title: " test product", price : 99 , category: "Glasses", image: "https://m.media-amazon.com/images/I/41Aug9VNcfL._AC_SX679_.jpg"  }
-    ,{id: 2, title: " test product", price : 199 , category: "Shoes", image:"https://m.media-amazon.com/images/I/71VTEP9+P4L._AC_SY695_.jpg" }
-    ,{id: 3, title: " test product", price : 299 , category: "Clothing", image:"https://m.media-amazon.com/images/I/71suPUcIWyL._AC_SY606_.jpg" }
-    ,{id: 4, title: " test product", price : 399 , category: "Accessories", image: "https://m.media-amazon.com/images/I/4117LwSvhjL._AC_SX569_.jpg"}
-    ,{id: 5, title: " test product", price : 499 , category: "Glasses", image: "https://m.media-amazon.com/images/I/41xVB9WJrEL._AC_SX679_.jpg"}
-    ,{id: 6, title: " test product", price : 599 , category: "Glasses", image: "https://m.media-amazon.com/images/I/31l5KGLk0KL._AC_SX522_.jpg"}
-    ,{id: 7, title: " test product", price : 699 , category: "Glasses", image: "https://m.media-amazon.com/images/I/51CEIkGZY2L._AC_SX569_.jpg"}
-    ,{id: 8, title: " test product", price : 799 , category: "Glasses", image: "https://m.media-amazon.com/images/I/61HRzMH53hL._AC_UL480_FMwebp_QL65_.jpg"}
-    ,{id: 9, title: " test product", price : 899 , category: "Glasses", image: "https://m.media-amazon.com/images/I/31zsmiF41UL._AC_UL480_FMwebp_QL65_.jpg"}
-    ,{id: 10, title: " test product", price : 999 , category: "Glasses", image: "https://m.media-amazon.com/images/I/51pTNz63fGL._AC_UL480_FMwebp_QL65_.jpg"}
-];
 
-let filteredProducts = [...products];
+
+let filteredProducts = [...productsDB];
 let currentPage = 1;
 const itemsPerPage = 6;
 
@@ -35,7 +23,7 @@ function renderProducts(productsToShow = filteredProducts) {
     grid.innerHTML = paginatedItems.map(product => `
         <div class="product-card" data-product-id="${product.id}">
             <div class="product-image">
-                <img src="${product.image}" alt="${product.title}" loading="lazy">
+                <img src="${product.images[0]}" alt="${product.title}" loading="lazy">
             </div>
             <div class="product-info">
                 <div class="product-category">${product.category}</div>
@@ -43,10 +31,10 @@ function renderProducts(productsToShow = filteredProducts) {
                 <div class="product-price">$${product.price.toLocaleString()}</div>
 
                 <div class="product-actions">
-                    <button class="action-btn add-to-cart" data-id="${product.id}"
-                        <i class="fa-solid fa-cart-shoppping"></i> Add to cart
+                    <button class="action-btn add-to-cart" data-id="${product.id}">
+                        <i class="fa-solid fa-cart-shopping"></i> Add to cart
                     </button>
-                    <button class="action-btn add-to-wishlist" data-id="${product.id} aria-label="Add to Wishlist">
+                    <button class="action-btn add-to-wishlist" data-id="${product.id}" aria-label="Add to Wishlist">
                         <i class="fa-regular fa-star"></i>
                     </button>
                 </div>
@@ -56,7 +44,7 @@ function renderProducts(productsToShow = filteredProducts) {
 
     //update text count
     document.getElementById('resultCount').textContent = productsToShow.length;
-    document.getElementById('totalProducts').textContent = products.length;
+    document.getElementById('totalProducts').textContent = productsDB.length;
 
     //render btns
     renderPagination(totalPages, productsToShow)
@@ -73,7 +61,7 @@ function renderPagination(totalPages, productsToShow){
 
     //create "Prev" Btn
     const prevBtn = document.createElement('button');
-    prevBtn.innerHTML = `<i class="fa-solid fa-chevron-left"></!>`;
+    prevBtn.innerHTML = `<i class="fa-solid fa-chevron-left"></i>`;
     prevBtn.classList.add('page-btn');
     prevBtn.disabled = currentPage === 1;
     prevBtn.addEventListener('click', () => {
@@ -101,7 +89,7 @@ function renderPagination(totalPages, productsToShow){
 
     //create "Next" btn
     const nextBtn = document.createElement('button');
-    nextBtn.innerHTML = `<i class="fa-solid fa-chevron-right"></!>`;
+    nextBtn.innerHTML = `<i class="fa-solid fa-chevron-right"></i>`;
     nextBtn.classList.add('page-btn');
     nextBtn.disabled = currentPage === totalPages;
     nextBtn.addEventListener('click', () => {
@@ -137,7 +125,7 @@ function updateFilterCount() {
 
 // Apply all filters
 function applyFilters() {
-    let results = [...products];
+    let results = [...productsDB];
 
     // Category filters
     const selectedCategories= Array.from(document.querySelectorAll('input[data-filter="Category"]:checked')).map(cb => cb.dataset.value);
@@ -272,6 +260,6 @@ document.addEventListener('click', (e) => {
 });
 
 // Export to other files
-window.products =products;
+window.products =productsDB;
 window.renderProducts = renderProducts;
 window.applyFilters = applyFilters;
