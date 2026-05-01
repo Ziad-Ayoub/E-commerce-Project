@@ -16,7 +16,7 @@ function renderCart() {
         total += item.price;
         tableBody.innerHTML += `
             <tr>
-                <td>${item.name}</td>
+                <td>${item.title}</td>
                 <td>${item.price} EGP</td>
                 <td><button onclick="deleteItem(${index})">Remove</button></td>
             </tr>
