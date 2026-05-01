@@ -26,24 +26,23 @@
         <div class="product-container">
             <div class="product-images">
                 <div class="main-image">
-                    <img id="current-img" src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=1000" alt="Main Product">
+                    <button id="prev-btn" class="slider-btn"><i class="fa-solid fa-chevron-left"></i></button>
+                    <button id="next-btn" class="slider-btn"><i class="fa-solid fa-chevron-right"></i></button>
+                    <img id="current-img" src="" alt="Main Product">
                 </div>
-                <div class="image-select">
-                    <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=200" class="thumb active">
-                    <img src="https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?q=80&w=200" class="thumb">
-                    <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=200" class="thumb">
+                <div class="image-select" id="thumbnail-container">
+                    <!-- Thumbnails will be dynamically generated here -->
                 </div>
             </div>
 
             <div class="product-content">
-                <h1 class="product-title">Premium Gold Collection</h1>
-                <div class="product-price">$299.00</div>
-                <div class="rating-stars">
-                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-regular fa-star"></i>
-                    <span>(4.8/5 Customer Rating)</span>
+                <h1 class="product-title" id="product-title">Loading...</h1>
+                <div class="product-price" id="product-price"></div>
+                <div class="rating-stars" id="product-rating">
+                    <!-- Stars will be dynamically generated here -->
                 </div>
-                <p class="product-description">
-                    Experience luxury with our exclusive collection. This product is crafted with precision to ensure quality, durability, and a style that perfectly aligns with the MyStore brand identity.
+                <p class="product-description" id="product-description">
+                    <!-- Product description will be loaded here -->
                 </p>
                 
                 <div class="product-actions">
@@ -104,7 +103,8 @@
             <p>&copy; 2026 E-Commerce Team Project. </p>
         </div>
     </footer>
-
+    <script src="js/data3.js"></script>
     <script src="js/details.js"></script>
+    
 </body>
 </html>

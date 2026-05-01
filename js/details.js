@@ -1,21 +1,128 @@
-// Gallery Functionality
-const thumbnails = document.querySelectorAll('.thumb');
-const mainImg = document.getElementById('current-img');
 
-thumbnails.forEach(thumb => {
-    thumb.addEventListener('click', function() {
-        // Change Source
-        mainImg.src = this.src;
-        
-        // Update active state
-        thumbnails.forEach(t => t.classList.remove('active'));
-        this.classList.add('active');
-        
-        // Simple animation
-        mainImg.style.opacity = '0.5';
-        setTimeout(() => { mainImg.style.opacity = '1'; }, 100);
+
+// Gallery Functionality: Circular-doubly-linked-list Image Slider
+class ImageNode {
+    constructor(thumbnailElement) {
+        this.thumb = thumbnailElement
+        this.src = thumbnailElement.src;
+        this.next = null;
+        this.prev = null;
+    }
+}
+
+class CircularDoublyLinkedList {
+    constructor() {
+        this.head = null;
+        this.tail = null;
+        this.current = null;
+    }
+
+    addNode(thumbnailElement) {
+        const newNode = new ImageNode(thumbnailElement);
+
+        if (!this.head) {
+            this.head = newNode;
+            this.tail = newNode;
+            this.current = newNode;
+
+            newNode.next = newNode;
+            newNode.prev = newNode;
+        } else {
+            this.tail.next = newNode;
+            newNode.prev = this.tail;
+            newNode.next = this.head;
+            this.head.prev = newNode;
+            this.tail = newNode;
+        }
+    }
+    goToNext() {
+        if (this.current) {
+            this.current = this.current.next;
+            return this.current;      // may need to remove .src
+        }
+    }
+    goToPrev() {
+        if (this.current) {
+            this.current = this.current.prev;
+            return this.current;     // may need to remove .src
+        }
+    }
+}
+
+//dynamic page initialization
+document.addEventListener('DOMContentLoaded', () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const productId = parseInt(urlParams.get('id')) || 1; // Default to product 1 if no ID provided
+    const product = productsDB.find(p => p.id === productId);
+
+    if (!product) {
+        document.getElementById('product-title').innerText = "Product Not Found";
+        return; // Exit if product not found
+    }
+
+    //populate text data
+    document.getElementById('product-title').innerText = product.title;
+    document.getElementById('product-price').innerText = `$${product.price}`;
+    document.getElementById('product-description').innerText = product.description;
+
+    //populate stars dynamically
+    const fullStars = Math.floor(product.rating);
+    const starHTML = '<i class="fa-solid fa-star"></i>'.repeat(fullStars) +
+    `<span>(${product.rating}/5 Customer Rating)</span>`;
+    document.getElementById('product-rating').innerHTML = starHTML;
+
+    //populate image slider & initialize circular list
+    const mainImg = document.getElementById('current-img');
+    const thumbnailContainer = document.getElementById('thumbnail-container');
+    const imageslider = new CircularDoublyLinkedList();
+
+    //set first image as main
+    mainImg.src = product.images[0];
+
+    //build the gallery
+    product.images.forEach((imgSrc, index) => {
+        const imgElement = document.createElement('img');
+        imgElement.src = imgSrc;
+        imgElement.className = index === 0 ? 'thumb active' : 'thumb';
+
+        thumbnailContainer.appendChild(imgElement);
+        imageslider.addNode(imgElement);
+
+        // Thumbnail click event
+        imgElement.addEventListener('click', function() {
+            let tempNode = imageslider.head;
+            do {
+                if (tempNode.thumb === this) {
+                    imageslider.current = tempNode; // Set current to clicked thumbnail
+                    updateGalleryUI(imageslider.current);
+                    break;
+                }
+                tempNode = tempNode.next;
+            } while (tempNode !== imageslider.head);
+        });
+    });
+
+    //slider UI update function
+    function updateGalleryUI(activeNode) {
+        if (!activeNode) return;
+        mainImg.src = activeNode.src;
+        mainImg.style.opacity = 0.5; // fade effect
+        setTimeout(() => {mainImg.style.opacity = 1;}, 300); // reset opacity after fade
+
+        const allThumbs = document.querySelectorAll('.thumb');
+        allThumbs.forEach(t => t.classList.remove('active'));
+        activeNode.thumb.classList.add('active');
+    }
+
+    //slider button events
+    document.getElementById('next-btn').addEventListener('click', () => {
+        updateGalleryUI(imageslider.goToNext());
+    });
+    document.getElementById('prev-btn').addEventListener('click', () => {
+        updateGalleryUI(imageslider.goToPrev());
     });
 });
+
 
 // Wishlist Toggle
 const wishlistBtn = document.getElementById('wishlist-trigger');
