@@ -60,6 +60,27 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         //populate text data
         document.getElementById('product-title').innerText = product.title;
+
+        const reviewsContainer = document.getElementById('reviews-list');
+        if (reviewsContainer) {
+            if (product.reviews && product.reviews.length > 0) {
+                reviewsContainer.innerHTML = product.reviews.map(review => {
+                    const stars = '<i class="fa-solid fa-star gold"></i>'.repeat(review.rating);
+                    
+                    return `
+                        <div class="review-item">
+                            <div class="review-header">
+                                <span class="review-user"><i class="fa-solid fa-user-circle"></i> ${review.name || "Anonymous Customer"}</span>
+                                <div class="stars-row">${stars}</div>
+                            </div>
+                            <p class="review-text">${review.comment}</p>
+                        </div>
+                    `;
+                }).join('');
+            } else {
+                reviewsContainer.innerHTML = '<p> No reviews yet. Be the first to review!</P>'
+            }
+        }
         //wire up the buttons for the global click listener
         const cartBtn = document.querySelector('.product-actions .btn-gold');
         if (cartBtn) {
@@ -80,8 +101,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         //populate stars dynamically
         const fullStars = Math.floor(product.rating) || 0; // Default to 0 if rating is undefined
+        const formattedRating =(product.rating || 0).toFixed(1);
         const starHTML = '<i class="fa-solid fa-star"></i>'.repeat(fullStars) +
-        `<span>(${product.rating}/5 Customer Rating)</span>`;
+        `<span>(${formattedRating}/5 Customer Rating)</span>`;
         document.getElementById('product-rating').innerHTML = starHTML;
 
         //populate image slider & initialize circular list

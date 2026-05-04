@@ -296,7 +296,7 @@ function renderQueue() {
             <div class="order-number">${index + 1}</div>
             <div class="order-details">
                 <div class="order-id">${order._id} — ${order.customer}</div>
-                <div class="order-meta">${order.qty}x ${order.item} &nbsp;·&nbsp; ${order.timestamp}</div>
+                <div class="order-meta">${order.qty}x items &nbsp;·&nbsp; ${order.item} &nbsp;·&nbsp; ${order.timestamp}</div>
             </div>
             <span class="order-total">$${order.total}</span>
         </div>

@@ -18,6 +18,9 @@ async function renderCart() {
         let total = 0;
 
         cartData.forEach((item, index) => {
+            //if a product was deleted by admin, skip so the page doesn't crash
+            if (!item.product) return;
+
             total += (item.product.price * item.quantity);
             tableBody.innerHTML += `
                 <tr>
@@ -26,6 +29,7 @@ async function renderCart() {
                     <td><button onclick="deleteItem(${index})">Remove</button></td>
                 </tr>
             `;
+            
         });
 
         if (totalPriceElement) totalPriceElement.innerText = total;
@@ -40,7 +44,7 @@ async function deleteItem(index) {
     if (!removedItem) return;
 
     try {
-        const response = await fetch(`${API_URL}/cart/${removedItem._id}`, {
+        const response = await fetch(`${API_URL}/cart/${removedItem.product._id}`, {
             method: 'DELETE',
             headers: getAuthHeaders()
         });
@@ -55,14 +59,14 @@ async function deleteItem(index) {
 
 
 async function undoDelete() {
-    if (deletedItemsStack.length > 0) return;
+    if (deletedItemsStack.length === 0) return;
     let lastItem = deletedItemsStack.pop();
     
     try {
         const response = await fetch(`${API_URL}/cart`, {
             method: 'POST',
             headers: getAuthHeaders(),
-            body: JSON.stringify({ productId: lastItem._id })
+            body: JSON.stringify({ productId: lastItem.product._id })
         });
         if (response.ok) {
             renderCart();
@@ -76,53 +80,29 @@ async function undoDelete() {
 }
 
 async function checkout() {
+    // 1. Guardrail: Prevent guest checkout crash
+    const userStr = localStorage.getItem('user');
+    if (!userStr) {
+        alert("Please log in or register to checkout.");
+        window.location.href = "profile.html";
+        return;
+    }
+
     if (!cartData || cartData.length === 0) {
         alert("Your cart is empty!");
         return;
     }
 
-    // 1. Calculate totals and format the items for the database
-    let totalAmount = 0;
-    let totalQty = 0;
-    let itemNames = [];
-
-    cartData.forEach(item => {
-        totalAmount += (item.product.price * item.quantity);
-        totalQty += item.quantity;
-        itemNames.push(`${item.quantity}x ${item.product.title}`);
-    });
-
-    // Join the item names into a single string (e.g., "2x Shoes, 1x Hat")
-    const itemString = itemNames.join(', ');
-    
-    // Get the user's name from localStorage
-    const user = JSON.parse(localStorage.getItem('user'));
-
     try {
-        // 2. Send the order to the backend
+        // 2. Tell the backend to process the cart (No body needed anymore!)
         const response = await fetch(`${API_URL}/orders`, {
             method: 'POST',
-            headers: getAuthHeaders(),
-            body: JSON.stringify({
-                customer: user.name,
-                qty: totalQty,
-                item: itemString,
-                total: totalAmount
-            })
+            headers: getAuthHeaders()
         });
 
         if (response.ok) {
             alert('Order placed successfully! Thank you for your purchase.');
-            
-            // 3. Clear the cart items from the database one-by-one
-            for (const item of cartData) {
-                await fetch(`${API_URL}/cart/${item.product._id}`, {
-                    method: 'DELETE',
-                    headers: getAuthHeaders()
-                });
-            }
-            
-            // 4. Re-render the empty cart
+            // 3. The backend already emptied the cart, just re-render the UI
             renderCart();
         } else {
             const errData = await response.json();
@@ -133,8 +113,5 @@ async function checkout() {
         alert('An error occurred during checkout. Please try again.');
     }
 }
-
-
-
 
 renderCart();

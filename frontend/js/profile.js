@@ -159,11 +159,6 @@ function logout() {
 }
 
 
-function goToOrders() {
-    alert("Orders page will be linked later!");
-}
-
-
 //added to check if user is already logged in and adjust UI accordingly
 document.addEventListener('DOMContentLoaded', () => {
     const token = localStorage.getItem('authToken');

@@ -1,5 +1,9 @@
 const Product = require('../models/Product');
 const Order = require('../models/Order');
+const User = require('../models/User');
+const fs = require('fs');
+const path = require('path');
+
 
 //product creation by admin
 exports.createProduct = async (req, res) => {
@@ -17,18 +21,55 @@ exports.createProduct = async (req, res) => {
     }
 };
 
-//product deletion by admin
+// Product deletion by admin
 exports.deleteProduct = async (req, res) => {
     try {
-        const product = await Product.findByIdAndDelete(req.params.id);
+        const productId = req.params.id;
+        const product = await Product.findById(productId);
+        
         if (!product) {
             return res.status(404).json({ message: 'Product not found' });
         }
-        res.json({ message: 'Product deleted successfully' });
+
+        // 1. Delete the image files from the uploads folder
+        if (product.images && product.images.length > 0) {
+            product.images.forEach(imageFilename => {
+                if (imageFilename !== 'default.jpg' && !imageFilename.startsWith('http')) {
+                    try {
+                        const imagePath = path.join(__dirname, '../uploads', imageFilename);
+                        if (fs.existsSync(imagePath)) {
+                            fs.unlinkSync(imagePath);
+                        }
+                    } catch (imgError) {
+                        console.error('Image deletion error:', imgError);
+                    }
+                }
+            });
+        }
+
+        // 2. Delete the actual product from the database
+        await Product.findByIdAndDelete(productId);
+
+        // 3. Clean up all User carts and wishlists
+        await User.updateMany(
+            {}, 
+            { 
+                $pull: { 
+                    cart: { product: productId }, 
+                    wishlist: productId 
+                } 
+            }
+        );
+
+        // 4. Send success response (This tells the frontend to instantly refresh!)
+        res.status(200).json({ message: 'Product fully deleted everywhere.' });
+        
     } catch (error) {
+        console.error("Delete Product Crash:", error);
         res.status(500).json({ message: error.message });
     }
 };
+
 
 //get pending orders for admin
 exports.getPendingOrders = async (req, res) => {

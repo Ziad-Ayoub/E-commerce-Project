@@ -186,8 +186,23 @@ document.addEventListener('DOMContentLoaded', async () => {
         productsDB = await response.json(); // Store original products list
         filteredProducts = [...productsDB]; // Initially, no filters applied
     
-        // Initial render
-        renderProducts();
+        // check URL if there is a specific category pressed from home page
+        const urlParams = new URLSearchParams(window.location.search);
+        const categoryParam = urlParams.get('category');
+
+        if (categoryParam) {
+            //find matching checkbox in the sidebar and check it
+            const checkbox = document.querySelector(`input[data-filter="Category"][data-value="${categoryParam}"]`);
+            if (checkbox) {
+                checkbox.checked = true;
+            }
+            //trigger the filter func to show this category only
+            applyFilters();
+        } else {
+            //if no category in URL, just render the page normally
+            renderProducts();
+        }
+
         updateFilterCount();
         // Filter event listners
         document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {

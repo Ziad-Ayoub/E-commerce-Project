@@ -19,6 +19,10 @@ async function renderWishlist() {
         wishlistList.style.padding = "40px 0";
 
         products.forEach(product => {
+
+            //if product was deleted by admin, it will skip it
+            if (!product) return;
+
             const itemHTML = `
                 <div class="product-card-template" style="border: 2px solid #e0c068; border-radius: 15px; padding: 20px; background: white; text-align: left; transition: 0.3s; position: relative;">
                 
@@ -48,6 +52,47 @@ async function renderWishlist() {
     } catch (error) {
         console.error('Error fetching wishlist:', error);
         wishlistList.innerHTML = '<p style="color: red; text-align: center; grid-column: 1 / -1;">Failed to load wishlist. Please log in and try again.</p>';
+    }
+}
+//Add an item directly to the cart
+async function addToCart(productId) {
+    try {
+        const response = await fetch(`${API_URL}/cart`, {
+            method: 'POST',
+            headers: getAuthHeaders(),
+            body: JSON.stringify({ productId })
+        });
+        if (response.ok) {
+            alert('Product added to cart!');
+        } else {
+            const errData = await response.json();
+            alert(`Failed to add to cart: ${errData.message}`);
+        }
+    } catch (error) {
+        console.error('Error adding to cart:', error);
+        alert('An error occurred. Please try again.');
+    }
+}
+
+//Remove an item from the wishlist
+async function removeFromWishlist(productId) {
+    try {
+        const response = await fetch(`${API_URL}/wishlist/${productId}`, {
+            method: 'DELETE',
+            headers: getAuthHeaders()
+        });
+        if (response.ok) {
+            // Remove the ID from the global cache so the stars update globally
+            if (window.userWishlistIds) {
+                window.userWishlistIds = window.userWishlistIds.filter(id => id !== productId);
+            }
+            // Re-render the page to instantly remove the card from the screen
+            renderWishlist(); 
+        } else {
+            alert('Failed to remove from wishlist.');
+        }
+    } catch (error) {
+        console.error('Error removing from wishlist:', error);
     }
 }
 renderWishlist();

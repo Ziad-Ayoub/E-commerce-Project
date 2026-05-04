@@ -8,7 +8,7 @@ const { getProducts, getProductById } = require('../controllers/productControlle
 const { createProduct } = require('../controllers/adminController');
 
 //Import Middlewares
-const { protect } = require('../middlewares/authMiddleware');
+const { protect,admin } = require('../middlewares/authMiddleware');
 const upload = require('../middlewares/uploadMiddleware');
 
 // GET Routes
@@ -16,6 +16,6 @@ router.get('/', getProducts);
 router.get('/:id', getProductById);
 
 // POST Route (Admin bypass enabled for testing: only requires 'protect')
-router.post('/', protect, upload.array('images', 5), createProduct);
+router.post('/', protect, admin, upload.array('images', 5), createProduct);
 
 module.exports = router;
